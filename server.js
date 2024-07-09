@@ -1,12 +1,15 @@
 //khởi tạo server
 const express = require('express'); //require express
+// từ express 4.16, ko cần require body-parser
+// var bodyParser = require('body-parser'); //require body-parser
 const app = express();
 const port = 3000;
 
 //khai báo sử dụng ejs
 app.set('view engine', 'ejs'); //khai báo view engine là ejs
 app.set('views', './views'); //khai báo thư mục chứ file giao diện
-
+// app.use(bodyParser.urlencoded()); //từ express 4.16 trở xuống
+app.use(express.urlencoded({ extended: true })); //từ express 4.16 trở lên
 //router
 app.get('/list', (req,res) => {
     let products = [
@@ -26,6 +29,14 @@ app.get('/list', (req,res) => {
         }
     ];
     res.render('list', { products })
+})
+
+app.get('/create', (req,res) => {
+    res.render('create');
+})
+
+app.post('/save', (req,res) => {
+    console.log(req.body.name, req.body.price, req.body.description);
 })
 
 app.get('/danhmuc/:iddanhmuc/sanpham/:id', (req,res) => {
