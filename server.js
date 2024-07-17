@@ -90,6 +90,34 @@ app.post('/save', upload.single('image'),  (req,res) => {
     // }
 })
 
+app.get('/edit/:id', (req,res) => {
+    var id = req.params.id;
+    db.query(`SELECT * FROM products WHERE id=${id}`, (err,data) => {
+        if (err) throw err //nếu có lỗi
+        res.render('edit', { product: data[0] });
+    })
+})
+
+app.post('/update/:id', upload.single('image'), (req,res) => {
+    //lấy id của sản phẩm cần update
+    var id = req.params.id;
+    //lấy dữ liệu gửi từ form
+    var name = req.body.name;
+    var price = req.body.price;
+    var description = req.body.description;
+    var image = req.file.filename;
+
+    db.query(
+        'UPDATE products SET name=?,price=?,description=?,image=? WHERE id=?',
+        [name,price,description,image,id],
+        (err,data) => {
+            if (err) throw err 
+            console.log('Update success');
+            res.redirect('/list');
+        })
+
+})
+
 app.get('/danhmuc/:iddanhmuc/sanpham/:id', (req,res) => {
     console.log(req.query); //được đánh dấu bằng ?ten1=x&ten2=y trên url
     console.log(req.params); //nằm trong url /:id
