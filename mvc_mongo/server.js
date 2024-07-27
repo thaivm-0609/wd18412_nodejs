@@ -26,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://127.0.0.1:27017/wd18412') //wd18412: tên database
     .then(result => {
+        //router dùng trên client
         app.get('/list', ProductController.getList); //danh sách sp
         app.get('/create', ProductController.create); //form tạo mới
         app.post('/save', upload.single('image'), ProductController.save); //lưu vào db
@@ -33,6 +34,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/wd18412') //wd18412: tên database
         app.post('/update/:id', upload.single('image'), ProductController.update); //update data
         app.get('/delete/:id', ProductController.delete); //xóa
 
+        //router cho api
+        app.get('/products', ProductController.apiGetList);
+        app.get('/products/:id', ProductController.apiDetail);
+        app.post('/products',upload.single('image'), ProductController.apiCreate);
+        app.put('/products/:id',upload.single('image'), ProductController.apiUpdate);
+        app.delete('/products/:id', ProductController.apiDelete);
         app.listen(port, () => { //chạy sv với port 3000
             console.log(`running in port ${port}`);
         })
