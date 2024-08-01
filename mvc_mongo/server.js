@@ -4,6 +4,8 @@ const multer = require('multer'); //upload file
 
 const mongoose = require('mongoose'); //ket noi voi mongodb
 const ProductController = require('./controllers/ProductController'); //require controller
+const AuthController = require('./controllers/AuthController');
+
 const app = express();
 const port = 3000;
 
@@ -40,6 +42,10 @@ mongoose.connect('mongodb://127.0.0.1:27017/wd18412') //wd18412: tên database
         app.post('/products',upload.single('image'), ProductController.apiCreate);
         app.put('/products/:id',upload.single('image'), ProductController.apiUpdate);
         app.delete('/products/:id', ProductController.apiDelete);
+        
+        //router đăng ký
+        app.post('/register', AuthController.register);
+        app.post('/login', AuthController.login);
         app.listen(port, () => { //chạy sv với port 3000
             console.log(`running in port ${port}`);
         })
